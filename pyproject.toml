@@ -21,7 +21,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/deftasparagusanaconda/pyquantize"
 Repository = "https://github.com/deftasparagusanaconda/pyquantize"
-Documentation = "https://github.com/YOUR_USERNAME/pyquantize#readme"
+Documentation = "https://github.com/deftasparagusanaconda/pyquantize#readme"
 
 [tool.setuptools.packages.find]
 where = ["src"]
