@@ -5,6 +5,20 @@ general-purpose quantization. includes [directed rounding](https://en.wikipedia.
 ```shell
 pip install pyquantize
 ```
+<details><summary>alternatives</summary>
+	
+using python explicitly:
+```shell
+python -m pip install pyquantize
+```
+or visit the PyPI webpage: https://pypi.org/project/pyquantize/  
+or install the latest github version:
+```shell
+git clone https://github.com/deftasparagusanaconda/pyquantize/
+cd pyquantize
+pip install -e .
+```
+</details>
 
 # how to use
 
