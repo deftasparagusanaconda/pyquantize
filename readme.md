@@ -50,7 +50,7 @@ quantum: an `int` or a `float` type. default is 1. the number will be quantized 
 
 offset: an `int` or a `float` type. default is 0. the quantization grid will be offset by this amount. `quantize(x, quantum=0.7, offset=0.2)` will change the grid from […, -1.4, -0.7, 0, 0.7, 1.4, …] to […, -1.2, -0.5, 0.2, 0.9, 1.6, …]
 
-centre: an `int` or a `float` type. default is 0. affects `'towards'` and `'away'` modes. `quantize(x, centre=float('inf'), mode='towards')` is the same as `quantize(x, mode='ceil')`. `quantize(x, centre=float('-inf'), mode='towards')` is the same as `quantize(x, mode='floor')`
+centre: an `int` or a `float` type. default is 0. affects `'toward'` and `'away'` modes. `quantize(x, centre=float('inf'), mode='toward')` is the same as `quantize(x, mode='ceil')`. `quantize(x, centre=float('-inf'), mode='toward')` is the same as `quantize(x, mode='floor')`
 similarly so for `mode='away'`
 
 threshold an `int` or a `float` type. default is 0.5. must satisfy 0 ≤ threshold ≤ 1. it determines the percentage at which the number is rounded up or down
@@ -61,12 +61,12 @@ signed_zero: a `bool` type. default is True. if True, whenever the result is zer
 
 mode: a `str` type. default is 'even'. determines the method for quantization. options are:  
 `'threshold'` - quantize down if the fractional part is less than threshold  
-`'floor'` - quantize down towards -∞  
-`'ceil'` - quantize up towards +∞  
-`'towards'` - quantize towards centre  
+`'floor'` - quantize down toward -∞  
+`'ceil'` - quantize up toward +∞  
+`'toward'` - quantize toward centre  
 `'away'` - quantize away from centre  
-`'even'` - quantize towards nearest even multiple (default)  
-`'odd'` - quantize towards nearest odd multiple  
+`'even'` - quantize toward nearest even multiple (default)  
+`'odd'` - quantize toward nearest odd multiple  
 `'alternate'` - quantize up or down alternately according to quantize.alternate_last  
 `'random'` - quantize up or down randomly  
 `'stochastic'` - quantize up or down according to stochastic probability  

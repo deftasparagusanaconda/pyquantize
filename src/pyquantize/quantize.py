@@ -23,22 +23,22 @@ def quantize(
 	offset : int or float, default=0
 		The grid will be shifted by this amount.
 	centre : int or float, default=0
-		(see 'towards' and 'away' modes)
+		(see 'toward' and 'away' modes)
 	threshold : int or float, default=0.5
 		Threshold at which the number is rounded up or down. must satisfy 0 ≤ threshold ≤ 1.
 	directed : bool, default=False
 		Forces quantization mode, even if not tied.
 	signed_zero: bool, default=True
 		If True, -0.1 rounds to -0.0 instead of 0.0, for example
-	mode : {'threshold','floor','ceil','towards','away','even','odd','alternate','random','stochastic'}, default='even'
+	mode : {'threshold','floor','ceil','toward','away','even','odd','alternate','random','stochastic'}, default='even'
 		Quantization method. options are:
 		'threshold'  → quantize down if the fractional part is less than threshold
-		'floor'      → quantize down towards -∞
-		'ceil'       → quantize up towards +∞
-		'towards'    → quantize towards centre
+		'floor'      → quantize down toward -∞
+		'ceil'       → quantize up toward +∞
+		'toward'    → quantize toward centre
 		'away'       → quantize away from centre
-		'even'       → quantize towards nearest even multiple (default)
-		'odd'        → quantize towards nearest odd multiple
+		'even'       → quantize toward nearest even multiple (default)
+		'odd'        → quantize toward nearest odd multiple
 		'alternate'  → quantize up or down alternately according to quantize.alternate_last
 		'random'     → quantize up or down randomly
 		'stochastic' → quantize up or down according to stochastic probability
@@ -92,7 +92,7 @@ def quantize(
 			result = multiple_lower
 		elif mode == 'ceil':
 			result = multiple_upper
-		elif mode == 'towards':
+		elif mode == 'toward':
 			result = multiple_lower if abs(multiple_lower-centre) < abs(multiple_upper-centre) else multiple_upper
 		elif mode == 'away':
 			result = multiple_upper if abs(multiple_lower-centre) < abs(multiple_upper-centre) else multiple_lower
@@ -108,7 +108,7 @@ def quantize(
 		elif mode == 'stochastic':
 			result = multiple_upper if random() < frac else multiple_lower
 		else:
-			raise ValueError("invalid mode. must be one of {'threshold','floor','ceil','towards','away','even','odd','alternate','random','stochastic'}")
+			raise ValueError("invalid mode. must be one of {'threshold','floor','ceil','toward','away','even','odd','alternate','random','stochastic'}")
 	
 	if signed_zero and result == 0:
 		result = copysign(0.0, number)
