@@ -1,5 +1,13 @@
 __version__ = '0.2.0'
 
-from .quantize import quantize
-from .quantize_grid import quantize_grid
-from .quantize_set import quantize_set
+from . import misc
+from .lattice import Lattice
+from .transformed_lattice import TransformedLattice
+from .finite_points import FinitePoints
+
+__dir__ = lambda: [
+		'FinitePoints',
+		'Lattice',
+		'TransformedLattice',
+		'misc'
+		]
