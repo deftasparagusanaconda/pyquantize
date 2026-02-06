@@ -1,19 +1,25 @@
 import pyquantize as pq
 
-def test_lattice():
-	lattice = pq.Lattice()
+def test_integer_lattice():
+	space = pq.IntegerLattice(1)
 
-	assert lattice.project(0.25) == 0
-	assert lattice.project(0.75) == 1
+	assert space.project(0.25) == 0
+	assert space.project(0.75) == 1
 
-def test_transformed_lattice():
-	l = pq.TransformedLattice()
+def test_transformed_space():
+	space = pq.TransformedSpace(pq.IntegerLattice(1), lambda x: x, lambda x: x)
 	
-	assert l.project(0.25) == 0
-	assert l.project(0.75) == 1
+	assert space.project(0.25) == 0
+	assert space.project(0.75) == 1
+
+def test_affine_lattice():
+	space = pq.AffineLattice(1, 0)
+
+	assert space.project(0.25) == 0
+	assert space.project(0.75) == 1
 
 def test_finite_points():
-	p = pq.FinitePoints({0, 1})
+	space = pq.FinitePoints({0, 1})
 	
-	assert p.project(0.25) == 0
-	assert p.project(0.75) == 1
+	assert space.project(0.25) == 0
+	assert space.project(0.75) == 1

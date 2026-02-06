@@ -1,5 +1,8 @@
 from .misc import Space, lp_norm, lp_metric
 from .typehints import Scalar, Vector, Norm, Metric
+from numbers import Real, Integral
+import math
+from collections.abc import Sequence
 
 class Lattice(Space):
 	'an affine lattice'
@@ -10,61 +13,62 @@ class Lattice(Space):
 			*,
 			norm: Norm = lp_norm, 
 			metric: Metric = lp_metric):
-		super().__init__(norm, metric)
 		
-		scalar_case = isinstance(quantum, Scalar) and isinstance(offset, Scalar)
-		vector_case = isinstance(quantum, tuple) and isinstance(offset, tuple)
+		scalar_case = isinstance(quantum, Real) and isinstance(offset, Real)
+		vector_case = isinstance(quantum, Sequence) and isinstance(offset, sequence)
 		
 		if not (scalar_case or vector_case):
 			raise ValueError('quantum and offset must be both Scalar or both Vector')
 		
 		if vector_case and len(quantum) != len(offset):
-			raise ValueError('dimensionality mismatch. len(quantum) ≠ len(offset)')
+			raise ValueError('dimension mismatch. len(quantum) ≠ len(offset)')
 		
+		dimension = 1 if scalar_case else len(quantum)
+		
+		super().__init__(dimension, norm = norm, metric = metric)
 		self.quantum = quantum
 		self.offset = offset
+	
+	def project(self,
+		quantity     : Scalar | Vector,
+		tie_fraction : Real      = 0.5,
+		rank         : Integral  = 1  ,
+		) -> Scalar | Vector:
+		'quantize a number to the n-th nearest number in a shifted (affine) uniform (equally-spaced) grid of numbers (lattice)'
+		if not isinstance(quantity, Real):
+			raise NotImplementedError('havent made this yet')
+
+		number = quantity	# alias
+
+		number_scaled = (number - self.offset) / self.quantum
+		fraction, index_lower = math.modf(number_scaled)
 		
-	def project(self, quantity: Scalar | Vector) -> Scalar | Vector:
-		raise NotImplementedError
-'''
-def nearest(
-		number       : _Real          ,
-		quantum      : _Real     = 1  ,
-		offset       : _Real     = 0  ,
-		tie_fraction : _Real     = 0.5,
-		rank         : _Integral = 1  ,		
-		) -> _Real:
-	'quantize a number to the n-th nearest number in a shifted (affine) uniform (equally-spaced) grid of numbers (lattice)'
-	
-	number_scaled = (number - offset) / quantum
-	fraction, index_lower = _math.modf(number_scaled)
-	
-	# tied condition
-	if fraction == tie_fraction:
-		raise NotImplementedError('havent made this yet')
+		# tied condition
+		if fraction == tie_fraction:
+			raise NotImplementedError('havent made this yet')
 
-	upper_is_nearer: bool = fraction > tie_fraction
-	
-	result_nearest_index: int = index_lower + upper_is_nearer
-	
-	# get the n-th nearest result, where n is rank
-	ranked_result_index: int = result_nearest_index + rank // 2 * (-1) ** (rank + upper_is_nearer)	
-	# (-1)ˣ is a sign alternating "trick", if you can even call it that. elementary, my dear watson
+		upper_is_nearer: bool = fraction > tie_fraction
+		
+		result_nearest_index: int = index_lower + upper_is_nearer
+		
+		# get the n-th nearest result, where n is rank
+		ranked_result_index: int = result_nearest_index + rank // 2 * (-1) ** (rank + upper_is_nearer)	
+		# (-1)ˣ is a sign alternating "trick", if you can even call it that. elementary, my dear watson
 
-	ranked_result: _Real = ranked_result_index * quantum + offset
-	
-	return ranked_result
+		ranked_result: Real = ranked_result_index * self.quantum + self.offset
+		
+		return ranked_result
 
 def quantize_to_uniform_grid_toward(
-		number       : _Real          ,
-		quantum      : _Real     = 1  ,
-		offset       : _Real     = 0  ,
-		tie_fraction : _Real     = 0.5,
-		rank         : _Integral = 1  ,
-		*                             ,
-		centre       : _Real     = 0  ,
-		rank_tolerace: _Integral = 2  ,
-		) -> _Real:
+		number       : Real          ,
+		quantum      : Real     = 1  ,
+		offset       : Real     = 0  ,
+		tie_fraction : Real     = 0.5,
+		rank         : Integral = 1  ,
+		*                            ,
+		centre       : Real     = 0  ,
+		rank_tolerace: Integral = 2  ,
+		) -> Real:
 	'quantize a number to an uniform (equally-spaced) grid of numbers, allowing a deviation from the nearest grid point towards centre'
 	
 	number_scaled = (number - offset) / quantum
@@ -77,8 +81,8 @@ def quantize_to_uniform_grid_toward(
 	upper_is_nearer: bool = fraction > tie_fraction
 	
 	result_nearest_index: int = index_lower + upper_is_nearer
-'''	
-'''
+
+
 
 from typing import Literal, Union
 from collections.abc import Callable, MutableSequence
@@ -171,8 +175,8 @@ def quantize_to_uniform_grid(
 	"""
 	# special cases -----------------------------------------------------------
 	
-    if quantum == 0:
-        raise ValueError("quantum cannot be zero. grid would be infinitely dense")
+	if quantum == 0:
+		raise ValueError("quantum cannot be zero. grid would be infinitely dense")
 	
 	# check invalid rank value
 	if not isinstance(rank, int) or rank <= 0:
@@ -184,7 +188,7 @@ def quantize_to_uniform_grid(
 	
 	# scale number to grid ----------------------------------------------------
 
-    return (number - offset) / quantum
+	return (number - offset) / quantum
 
 	number_scaled = scale_number_to_uniform_grid(number, quantum, offset)
 	
@@ -239,6 +243,3 @@ def quantize_to_uniform_grid(
 			return multiple_lower if rng() > tie_frac else multiple_upper
 		else:
 			raise ValueError("invalid tie. must be one of {'even', 'odd', 'toward', 'away', 'alternate', 'random'}")
-'''
-
-
