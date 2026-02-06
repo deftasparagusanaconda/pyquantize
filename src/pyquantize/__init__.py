@@ -5,13 +5,22 @@ __version__ = '0.3.0'
 #from .lattice import Lattice
 #from .transformed_lattice import TransformedLattice
 #from .finite_points import FinitePoints
-from .space import IntegerLattice, TransformedSpace, AffineLattice, FinitePoints
+#from .space import IntegerLattice, TransformedSpace, AffineLattice, FinitePoints
+from .space import *
 
 __dir__ = lambda: [
 		#'quantize',
+
+		# classes
 		'IntegerLattice',
 		'TransformedSpace',
 		'AffineLattice'
 		'FinitePoints',
+
+		# functions
+		'quantize',
+		'qdivmod',
+		'qround'
+
 		#'misc'
 		]
