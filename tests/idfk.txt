@@ -1,0 +1,29 @@
+say we have an IntegerLattice:
+
+{…, -2, -1, 0, 1, 2, …}
+
+and say we have a bunch of numbers we want to project onto it
+{0.5, 0.75, 1}
+
+we want to find the 1st nearest
+
+0.5 is a tie
+0.75 → 1
+1 → 1	(direct)
+
+now say we want to find the 2nd nearest
+
+0.5 is a tie. we get the 2nd nearest of the tie result
+0.75 → 1, and the 2nd nearest would be 0. easy
+1 is a tie between two 2nd nearests.
+
+we can have many possible branches:
+
+  | branch                                   | what to do?
+--+------------------------------------------+---------------------------------------------------------------
+A | when not ranked, and lands on some point | return ceil(quantity) if fraction > tie_fraction else floor(quantity)
+B | when not ranked, and lands on a multiple | return quantity
+C | when not ranked, and lands on a tie      | match tie_mode
+D | when     ranked, and lands on some point | return ranked version of A result
+E | when     ranked, and lands on a multiple | match rank_tie_mode (yes we could return match tie_mode of B result but something begs me to add a rank_tie_mode)
+F | when     ranked, and lands on a tie      | return ranked version of C result
