@@ -124,10 +124,17 @@ class Space(ABC):
 	#	'show some points on the space to get a feel for what its like'
 	#	points = {self.project(0) for i in range(1, point_count + 1)}
 	#	print('{' + …, … + '}')
+
+def euclidean_metric(A: Real | Vector, B: Real | Vector) -> Real:
+	if isinstance(A, Real):
+		return abs(A - B)
+	else:
+		return math.hypot(*(abs(a - b) for a, b in zip(A, B, strict = True)))
 	
 class FinitePoints(Space):
-	def __init__(self, points: set[Real] | set[Vector]) -> None:
+	def __init__(self, points: set[Real] | set[Vector], *, metric: Callable[[Real, Real], Real] | Callable[[Vector, Vector], Real] = euclidean_metric) -> None:
 		self.points: set[Real] | set[Vector] = points
+		self.metric: Callable[[Real, Real], Real] | Callable[[Vector, Vector], Real] = metric
 		
 		iterator = iter(points)
 		some_point = next(iter(points))
@@ -144,12 +151,11 @@ class FinitePoints(Space):
 		super().__init__(dimension)
 	
 	def project(self, quantity: Real | Vector) -> Real | Vector:
-		if math.isinf(quantity):
+		if isinstance(quantity, Real) and math.isinf(quantity):
 			return (min if quantity < 0 else max)(self.points)
 		
-		key = lambda x: abs(x - quantity)	# we assume an euclidean space, with euclidean distance metric
-
-		return heapq.nsmallest(1, self.points, key = key)[-1]
+		#return heapq.nsmallest(1, self.points, key = key)[-1]
+		return min(self.points, key = lambda x: self.metric(x, quantity))
 
 class IntegerLattice(Space):
 	def project(self, 
@@ -273,13 +279,13 @@ def qround(number: Real, digits: Real = 0, *args, **kwargs):
 
 __dir__ = lambda: [
 		# classes
-		'IntegerLattice'  ,
+		'IntegerLattice',
 		'TransformedSpace',
-		'AffineLattice'   ,
-		'FinitePoints'	,
+		'AffineLattice',
+		'FinitePoints',
 		
 		# functions
-		'quantize'		,
-		'qdivmod'		 ,
-		'qround'		  ,
+		'quantize',
+		'qdivmod',
+		'qround',
 		]
